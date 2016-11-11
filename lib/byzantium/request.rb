@@ -1,12 +1,10 @@
-require 'socket'
-
 module Byzantium
   class Request
     extend Forwardable
 
     attr_reader :client, :action_type, :params
 
-    delegate leader_instance: :client
+    delegate %i(configuration distribution) => :client
 
     def initialize(client, action_type, params = {})
       @client = client
@@ -15,18 +13,13 @@ module Byzantium
     end
 
     def perform
-      socket.puts request_payload.to_json
-      response = Response.new socket.gets
-      response.parse
+      raw_response = distribution.send payload
+      Response.new raw_response
     end
 
     private
 
-    def socket
-      @socket ||= TCPSocket.new leader_instance.host, leader_instance.port
-    end
-
-    def request_payload
+    def payload
       { type: action_type.to_s }.merge! params
     end
   end
