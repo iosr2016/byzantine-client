@@ -12,7 +12,7 @@ require 'byzantium/actions'
 require 'byzantium/client'
 
 module Byzantium
-  def self.connect
-    Client.new
+  def self.connect(options = {})
+    Client.new options
   end
 end

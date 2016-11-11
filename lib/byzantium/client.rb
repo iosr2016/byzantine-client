@@ -4,8 +4,8 @@ module Byzantium
 
     attr_reader :configuration
 
-    def initialize
-      @configuration = Configuration.new
+    def initialize(options = {})
+      @configuration = Configuration.new options
     end
 
     def configure
