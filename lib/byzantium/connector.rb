@@ -1,16 +1,28 @@
 require 'socket'
+require 'timeout'
 
 module Byzantium
   class Connector
-    attr_reader :node
+    extend Forwardable
 
-    def initialize(node)
+    attr_reader :configuration, :node
+
+    delegate max_timeout: :configuration
+
+    def initialize(configuration, node)
+      @configuration = configuration
       @node = node
     end
 
     def send(payload)
-      socket.puts payload.to_json
-      socket.gets
+      raw_response = nil
+
+      Timeout.timeout(max_timeout) do
+        socket.puts payload.to_json
+        raw_response = socket.gets
+      end
+
+      raw_response
     end
 
     def socket

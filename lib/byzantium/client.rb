@@ -17,7 +17,7 @@ module Byzantium
     end
 
     def distribution
-      @distribution ||= Distribution.new configuration.urls
+      @distribution ||= Distribution.new configuration
     end
   end
 end

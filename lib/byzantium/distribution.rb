@@ -1,13 +1,17 @@
 module Byzantium
   class Distribution
-    attr_reader :urls
+    extend Forwardable
 
-    def initialize(urls)
-      @urls = urls
+    attr_reader :configuration
+
+    delegate urls: :configuration
+
+    def initialize(configuration)
+      @configuration = configuration
     end
 
     def send(payload)
-      Connector.new(leader).send payload
+      Connector.new(configuration, leader).send payload
     end
 
     def leader
