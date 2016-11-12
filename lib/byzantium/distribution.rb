@@ -14,8 +14,16 @@ module Byzantium
       raise_unknown_leader unless leader
     end
 
-    def send(payload)
-      Connector.new(configuration, leader).send payload
+    def send_to_all(payload)
+      nodes.map { |node| send_to_node node, payload }
+    end
+
+    def send_to_leader(payload)
+      send_to_node leader, payload
+    end
+
+    def send_to_node(node, payload)
+      Connector.new(configuration, node).send payload
     end
 
     def leader

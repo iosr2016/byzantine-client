@@ -17,12 +17,12 @@ module Byzantium
       yield configuration
     end
 
-    def perform_request(action_type, params = {})
+    def perform_request(receiver, type, params = {})
       logger.progname = SecureRandom.hex 4
 
-      logger.info "#{action_type} #{params}"
+      logger.info "#{type} #{params}"
 
-      response = Request.new(self, action_type, params).perform
+      response = Request.new(self, receiver, type, params).perform
       logger.info response.body
 
       response

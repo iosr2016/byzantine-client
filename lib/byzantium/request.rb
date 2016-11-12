@@ -2,25 +2,29 @@ module Byzantium
   class Request
     extend Forwardable
 
-    attr_reader :client, :action_type, :params
+    attr_reader :client, :receiver, :type, :params
 
     delegate %i(configuration distribution) => :client
 
-    def initialize(client, action_type, params = {})
+    def initialize(client, receiver, type, params = {})
       @client = client
-      @action_type = action_type
+      @receiver = receiver
+      @type = type
       @params = params
     end
 
     def perform
-      raw_response = distribution.send payload
       Response.new raw_response
     end
 
     private
 
+    def raw_response
+      distribution.send "send_to_#{receiver}", payload
+    end
+
     def payload
-      { type: action_type.to_s }.merge! params
+      { type: type.to_s }.merge! params
     end
   end
 end
