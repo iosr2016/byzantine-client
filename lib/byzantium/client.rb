@@ -20,10 +20,10 @@ module Byzantium
     def perform_request(receiver, type, params = {})
       logger.progname = SecureRandom.hex 4
 
-      logger.info "#{type} #{params}"
+      logger.info "Request #{type} #{params}"
 
       response = Request.new(self, receiver, type, params).perform
-      logger.info response.body
+      logger.info "Response #{response.body}"
 
       response
     rescue => error
