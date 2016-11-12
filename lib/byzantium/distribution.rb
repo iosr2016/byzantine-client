@@ -15,7 +15,16 @@ module Byzantium
     end
 
     def send_to_all(payload)
-      nodes.map { |node| send_to_node(node, payload) }.compact
+      raw_responses = []
+
+      threads = nodes.map do |node|
+        Thread.new do
+          raw_responses << send_to_node(node, payload)
+        end
+      end
+
+      threads.each(&:join)
+      raw_responses.compact
     end
 
     def send_to_leader(payload)
