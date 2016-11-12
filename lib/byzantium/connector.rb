@@ -7,7 +7,7 @@ module Byzantium
 
     attr_reader :configuration, :node
 
-    delegate max_timeout: :configuration
+    delegate %i(logger max_timeout) => :configuration
 
     def initialize(configuration, node)
       @configuration = configuration
@@ -23,7 +23,9 @@ module Byzantium
           raw_response = socket.gets
         end
       rescue Timeout::Error => error
-        raise_timeout_error error
+        log_timeout error
+      rescue Errno::ECONNREFUSED => error
+        log_connection_refused error
       end
 
       raw_response
@@ -33,8 +35,12 @@ module Byzantium
       @socket ||= TCPSocket.new node.host, node.port
     end
 
-    def raise_timeout_error(error)
-      raise Errors::RequestTimeout, error.to_s
+    def log_timeout(error)
+      logger.warn "Request to node (#{node.url}) timed out: #{error}"
+    end
+
+    def log_connection_refused(error)
+      logger.warn "Node (#{node.url}) refused connection: #{error}"
     end
   end
 end

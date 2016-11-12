@@ -7,6 +7,10 @@ module Byzantium
       @port = port
     end
 
+    def url
+      "#{host}:#{port}"
+    end
+
     def self.from_url(url)
       host, port = url.split ':'
       new(host, port.to_i)

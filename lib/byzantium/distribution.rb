@@ -15,7 +15,7 @@ module Byzantium
     end
 
     def send_to_all(payload)
-      nodes.map { |node| send_to_node node, payload }
+      nodes.map { |node| send_to_node(node, payload) }.compact
     end
 
     def send_to_leader(payload)
