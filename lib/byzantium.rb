@@ -2,6 +2,7 @@ require 'json'
 require 'forwardable'
 
 require 'byzantium/version'
+require 'byzantium/errors'
 require 'byzantium/configuration'
 require 'byzantium/node'
 require 'byzantium/connector'

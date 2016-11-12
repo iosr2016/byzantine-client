@@ -17,7 +17,13 @@ module Byzantium
     end
 
     def distribution
-      @distribution ||= Distribution.new configuration
+      @distribution ||= initialize_distribution
+    end
+
+    def initialize_distribution
+      distribution = Distribution.new configuration
+      distribution.identify_leader
+      distribution
     end
   end
 end
